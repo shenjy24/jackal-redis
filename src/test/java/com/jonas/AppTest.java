@@ -1,20 +1,12 @@
 package com.jonas;
 
-import static org.junit.Assert.assertTrue;
-
+import com.jonas.jedis.RedisUtils;
 import org.junit.Test;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
+public class AppTest {
+
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void testSet() {
+        RedisUtils.set("test", "value", 1000, 0);
     }
 }

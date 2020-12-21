@@ -1,0 +1,7 @@
+redis:
+  host: 127.0.0.1
+  port: 6379
+  maxIdle: 10
+  maxTotal: 30
+  maxWaitMillis: 3000
+
