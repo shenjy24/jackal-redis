@@ -153,12 +153,11 @@ public class RedisAPI {
         }
     }
 
-    @SneakyThrows
     public static void pipeline(PipelineTask task, int db) {
         try (Jedis jedis = getJedis(db)) {
             Pipeline pipeline = jedis.pipelined();
             task.doTask(pipeline);
-            pipeline.close();
+            pipeline.sync();
         }
     }
 
