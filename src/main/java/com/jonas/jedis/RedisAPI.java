@@ -1,12 +1,13 @@
 package com.jonas.jedis;
 
+import lombok.SneakyThrows;
 import redis.clients.jedis.*;
 import redis.clients.util.Pool;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class RedisUtils {
+public class RedisAPI {
     private static final Pool<Jedis> redisPool;
     private static final Random random = new Random();
 
@@ -140,16 +141,29 @@ public class RedisUtils {
         }
     }
 
-    public static void publish(String channel, String message, int db) {
-        try (Jedis jedis = getJedis(db)) {
+    public static void publish(String channel, String message) {
+        try (Jedis jedis = getJedis()) {
             jedis.publish(channel, message);
         }
     }
 
-    public static void subscribe(JedisPubSub jedisPubSub, String channel, int db) {
-        try (Jedis jedis = getJedis(db)) {
+    public static void subscribe(JedisPubSub jedisPubSub, String channel) {
+        try (Jedis jedis = getJedis()) {
             jedis.subscribe(jedisPubSub, channel);
         }
+    }
+
+    @SneakyThrows
+    public static void pipeline(PipelineTask task, int db) {
+        try (Jedis jedis = getJedis(db)) {
+            Pipeline pipeline = jedis.pipelined();
+            task.doTask(pipeline);
+            pipeline.close();
+        }
+    }
+
+    private static Jedis getJedis() {
+        return getJedis(0);
     }
 
     private static Jedis getJedis(int db) {
