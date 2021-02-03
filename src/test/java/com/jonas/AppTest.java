@@ -7,7 +7,7 @@ public class AppTest {
 
     @Test
     public void testSet() {
-        RedisAPI.set("test", "value", 1000, 0);
+        RedisAPI.set("test", "value", 1000);
     }
 
     @Test
@@ -21,6 +21,6 @@ public class AppTest {
                 String k = String.format(key, i);
                 pipeline.set(k, String.valueOf(i));
             }
-        }, 0);
+        });
     }
 }
