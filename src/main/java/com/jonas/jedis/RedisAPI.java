@@ -60,6 +60,18 @@ public class RedisAPI {
         }
     }
 
+    public static void zadd(String key, String member, int score) {
+        try (Jedis jedis = getJedis()) {
+            jedis.zadd(key, score, member);
+        }
+    }
+
+    public static void zincrby(String key, String member, int score) {
+        try (Jedis jedis = getJedis()) {
+            jedis.zincrby(key, score, member);
+        }
+    }
+
     public static void zincrby(String key, Map<String /* member */, Integer /* score */> args) {
         try (Jedis jedis = getJedis()) {
             for (Map.Entry<String, Integer> entry : args.entrySet()) {
@@ -70,7 +82,32 @@ public class RedisAPI {
 
     public static Set<String> zrange(String key, int len) {
         try (Jedis jedis = getJedis()) {
-            return jedis.zrange(key, 0, len);
+            return jedis.zrange(key, 0, len - 1);
+        }
+    }
+
+    public static int zscore(String key, String member) {
+        try (Jedis jedis = getJedis()) {
+            Double score = jedis.zscore(key, member);
+            return null != score ? score.intValue() : 0;
+        }
+    }
+
+    /**
+     * 获得key里面包含几个member
+     *
+     * @param key 键
+     * @return member个数
+     */
+    public static int zcard(String key) {
+        try (Jedis jedis = getJedis()) {
+            return Math.toIntExact(jedis.zcard(key));
+        }
+    }
+
+    public static void zremrangeByRank(String key, int start, int end) {
+        try (Jedis jedis = getJedis()) {
+            jedis.zremrangeByRank(key, start, end);
         }
     }
 
